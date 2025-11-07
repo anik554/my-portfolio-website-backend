@@ -4,46 +4,49 @@ import { prisma } from "../../config/db";
 const createBlog = async (payload: Prisma.BlogCreateInput) => {
   const blog = await prisma.blog.create({
     data: payload,
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      thumbnail: true,
-      isFeatured: true,
-      tags: true,
-      views: true,
-      authorId: true,
-      author: true,
-      createdAt: true,
-      updatedAt: true,
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
   return blog;
 };
 
-const getAllBlogs = async () => {
+const getAllBlogs = async ({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  const skip = (page - 1) * limit;
   const blogs = await prisma.blog.findMany({
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      thumbnail: true,
-      isFeatured: true,
-      tags: true,
-      views: true,
-      authorId: true,
+    skip,
+    take: limit,
+    orderBy:{createdAt:"desc"},
+    include: {
       author: {
-        select:{
-            id:true,
-            name:true,
-            email:true
-        }
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
       },
-      createdAt: true,
-      updatedAt: true,
     },
   });
-  return blogs;
+  const totalBlogs = await prisma.blog.count()
+  return {
+    total: totalBlogs,
+    page,
+    limit,
+    totalPage:Math.ceil(totalBlogs / limit),
+    data:blogs
+  };
 };
 
 const getSingleBlog = async (id: number) => {
@@ -61,11 +64,11 @@ const getSingleBlog = async (id: number) => {
       views: true,
       authorId: true,
       author: {
-        select:{
-            id:true,
-            name:true,
-            email:true
-        }
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
       },
       createdAt: true,
       updatedAt: true,
@@ -93,11 +96,11 @@ const updateBlog = async (
       views: true,
       authorId: true,
       author: {
-        select:{
-            id:true,
-            name:true,
-            email:true
-        }
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
       },
       createdAt: true,
       updatedAt: true,
@@ -112,9 +115,9 @@ const deleteBlog = async (id: number) => {
       id,
     },
   });
-  
-  if(!blogId){
-    throw new Error("Blog Not Found!!!")
+
+  if (!blogId) {
+    throw new Error("Blog Not Found!!!");
   }
 
   const blog = await prisma.blog.delete({
@@ -130,5 +133,5 @@ export const BlogServices = {
   getAllBlogs,
   getSingleBlog,
   updateBlog,
-  deleteBlog
+  deleteBlog,
 };
