@@ -14,12 +14,33 @@ const createBlog = async(payload:Prisma.BlogCreateInput)=>{
             views:true,
             authorId:true,
             author:true,
+            createdAt:true,
+            updatedAt:true,
         }
     })
     return blog
 }
 
+const getAllBlogs =async()=>{
+    const blogs= await prisma.blog.findMany({
+        select:{
+            id: true,
+            title:true,
+            content:true,
+            thumbnail:true,
+            isFeatured:true,
+            tags:true,
+            views:true,
+            authorId:true,
+            author:true,
+            createdAt:true,
+            updatedAt:true,
+        }
+    })
+    return blogs
+}
 
 export const BlogServices = {
-    createBlog
+    createBlog,
+    getAllBlogs
 }

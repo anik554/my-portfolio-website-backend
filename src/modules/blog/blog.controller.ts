@@ -10,6 +10,16 @@ const createBlog = async(req:Request, res:Response)=>{
     }
 }
 
+const getAllBlogs = async(req:Request, res:Response)=>{
+    try {
+        const blogs = await BlogServices.getAllBlogs()
+        res.status(200).json(blogs)
+    } catch (error) {
+        res.status(500).json({message:"Internal Server Error"})
+    }
+}
+
 export const BlogControllers = {
-    createBlog
+    createBlog,
+    getAllBlogs
 }
