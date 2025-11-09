@@ -47,8 +47,8 @@ const getAllBlogs = async ({
           },
         ],
       },
-      typeof isFeatured === "boolean" && {isFeatured}
-    ].filter(Boolean)
+      typeof isFeatured === "boolean" && { isFeatured },
+    ].filter(Boolean),
   };
   const blogs = await prisma.blog.findMany({
     skip,
@@ -76,31 +76,31 @@ const getAllBlogs = async ({
 };
 
 const getSingleBlog = async (id: number) => {
-  const singleBlog = await prisma.blog.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      thumbnail: true,
-      isFeatured: true,
-      tags: true,
-      views: true,
-      authorId: true,
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+  return await prisma.$transaction(async (tx) => {
+    await tx.blog.update({
+      where: {
+        id,
+      },
+      data: {
+        views: { increment: 1 },
+      },
+    });
+
+    return await tx.blog.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
-      createdAt: true,
-      updatedAt: true,
-    },
+    });
   });
-  return singleBlog;
 };
 
 const updateBlog = async (

@@ -42,6 +42,7 @@ model User {
   blogs      Blog[]
   auths      AuthProvider[]
   projects   Project[]
+  profile    Profile?
 }
 
 model Blog {
@@ -71,4 +72,21 @@ model Project {
   author       User     @relation(fields: [authorId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Profile {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  bio        String?
+  avatar     String?
+  phone      String?
+  location   String?
+  github     String?
+  linkedin   String?
+  skills     String[]
+  experience String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
