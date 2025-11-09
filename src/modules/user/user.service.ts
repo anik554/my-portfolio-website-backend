@@ -1,8 +1,22 @@
 import { Prisma, User } from "@prisma/client";
 import { prisma } from "../../config/db";
 
-const createUser = async (payload: Prisma.UserCreateInput): Promise<User> => {
+const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User>> => {
   const user = await prisma.user.create({
+    select:{
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      phone: true,
+      picture: true,
+      status: true,
+      auths: true,
+      blogs: true,
+      isVerified: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     data: payload,
   });
   return user;
