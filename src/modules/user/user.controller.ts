@@ -4,9 +4,13 @@ import { UserServices } from "./user.service";
 const createUser = async (req: Request, res: Response) => {
   try {
     const user = await UserServices.createUser(req.body);
-    res.status(201).json(user);
+    res.status(201).json({
+      statusCode: 201,
+      message: "User created successfully",
+      data: user
+    });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({error:"Faild to create user", details:error});
     console.error(error);
   }
 };
@@ -14,7 +18,11 @@ const createUser = async (req: Request, res: Response) => {
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await UserServices.getAllUsers();
-    res.status(200).json(users);
+    res.status(200).json({
+      statusCode: 201,
+      message:"User retrived successfully",
+      data: users
+    });
   } catch (error) {
     res.status(500);
     res.status(500).send(error);
