@@ -26,7 +26,7 @@ const getAllBlogs = async ({
   page: number;
   limit: number;
   search: string;
-  isFeatured: boolean;
+  isFeatured?: boolean;
 }) => {
   const skip = (page - 1) * limit;
   const where: any = {
