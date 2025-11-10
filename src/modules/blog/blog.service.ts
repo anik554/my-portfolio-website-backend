@@ -135,6 +135,38 @@ const updateBlog = async (
   return blog;
 };
 
+const getBlogStat = async () => {
+  return await prisma.$transaction(async (tx) => {
+    const aggregates = await prisma.blog.aggregate({
+      _count: true,
+      _sum: { views: true },
+      _avg: { views: true },
+      _min: { views: true },
+      _max: { views: true },
+    });
+    const featuredCount = await tx.blog.count({
+      where:{
+        isFeatured:true
+      }
+    })
+    const topfeatured = await tx.blog.findFirst({
+      
+    })
+    return {
+      stats: {
+        totalBlogs: aggregates._count ?? 0,
+        totalViews: aggregates._sum.views ?? 0,
+        avgViews: aggregates._avg.views ?? 0,
+        minViews: aggregates._min.views ?? 0,
+        maxViews: aggregates._max.views ?? 0,
+      },
+      featured:{
+        count: featuredCount ?? 0
+      }
+    };
+  });
+};
+
 const deleteBlog = async (id: number) => {
   const blogId = await prisma.blog.findUnique({
     where: {
@@ -158,6 +190,7 @@ export const BlogServices = {
   createBlog,
   getAllBlogs,
   getSingleBlog,
+  getBlogStat,
   updateBlog,
   deleteBlog,
 };

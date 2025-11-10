@@ -1,28 +1,44 @@
-import { Request,Response } from "express";
+import { Request, Response } from "express";
 import { BlogServices } from "./blog.service";
 
-const createBlog = async(req:Request, res:Response)=>{
-    try {
-        const blog = await BlogServices.createBlog(req.body)
-        res.status(201).json(blog)
-    } catch (error) {
-        res.status(500).send(error)
-    }
-}
+const createBlog = async (req: Request, res: Response) => {
+  try {
+    const blog = await BlogServices.createBlog(req.body);
+    res.status(201).json(blog);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 
-const getAllBlogs = async(req:Request, res:Response)=>{
-    try {
-        const page = Number(req.query.page) || 1
-        const limit = Number(req.query.limit) || 10
-        const search = (req.query.search as string) || ""
-        const isFeatured = req.query.isFeatured ? req.query.isFeatured === "true" : undefined
-        const blogs = await BlogServices.getAllBlogs({page,limit,search,isFeatured})
-        
-        res.status(200).json(blogs)
-    } catch (error) {
-        res.status(500).json({error:"Faild to fetch posts", details:error});
-    }
-}
+const getBlogStat = async (req: Request, res: Response) => {
+  try {
+    const blog = await BlogServices.getBlogStat();
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+const getAllBlogs = async (req: Request, res: Response) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = (req.query.search as string) || "";
+    const isFeatured = req.query.isFeatured
+      ? req.query.isFeatured === "true"
+      : undefined;
+    const blogs = await BlogServices.getAllBlogs({
+      page,
+      limit,
+      search,
+      isFeatured,
+    });
+
+    res.status(200).json(blogs);
+  } catch (error) {
+    res.status(500).json({ error: "Faild to fetch posts", details: error });
+  }
+};
 
 const getSingleBlog = async (req: Request, res: Response) => {
   try {
@@ -30,7 +46,7 @@ const getSingleBlog = async (req: Request, res: Response) => {
     const singleBlog = await BlogServices.getSingleBlog(Number(blogId));
     res.status(200).json(singleBlog);
   } catch (error) {
-    res.status(500).json({error:"Faild to fetch posts", details:error});
+    res.status(500).json({ error: "Faild to fetch posts", details: error });
   }
 };
 
@@ -55,9 +71,10 @@ const deleteBlog = async (req: Request, res: Response) => {
 };
 
 export const BlogControllers = {
-    createBlog,
-    getAllBlogs,
-    getSingleBlog,
-    updateBlog,
-    deleteBlog
-}
+  createBlog,
+  getAllBlogs,
+  getBlogStat,
+  getSingleBlog,
+  updateBlog,
+  deleteBlog,
+};
