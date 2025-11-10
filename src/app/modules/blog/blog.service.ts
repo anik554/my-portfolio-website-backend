@@ -149,9 +149,22 @@ const getBlogStat = async () => {
         isFeatured:true
       }
     })
-    const topfeatured = await tx.blog.findFirst({
-      
+    const topFeatured = await tx.blog.findFirst({
+      where:{
+        isFeatured:true
+      },
+      orderBy:{views:"desc"}
     })
+
+    const lastWeek = new Date()
+    lastWeek.setDate(lastWeek.getDate() - 7)
+
+    const lastWeekBlogCount = await tx.blog.count({
+      where:{
+        createdAt: lastWeek
+      }
+    })
+
     return {
       stats: {
         totalBlogs: aggregates._count ?? 0,
@@ -161,8 +174,10 @@ const getBlogStat = async () => {
         maxViews: aggregates._max.views ?? 0,
       },
       featured:{
-        count: featuredCount ?? 0
-      }
+        count: featuredCount ?? 0,
+        topCount: topFeatured ?? 0
+      },
+      lastWeekBlogCount
     };
   });
 };

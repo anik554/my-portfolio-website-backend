@@ -1,10 +1,13 @@
 import compression from "compression";
 import cors from "cors";
-import express from "express";
-import { UserRouter } from "./modules/user/user.routes";
-import { BlogRouter } from "./modules/blog/blog.routers";
-import { ProjectRouter } from "./modules/project/project.routes";
-import { AuthRouters } from "./modules/auth/auth.routers";
+import express, { NextFunction, Request, Response } from "express";
+import { UserRouter } from "./app/modules/user/user.routes";
+import { BlogRouter } from "./app/modules/blog/blog.routers";
+import { ProjectRouter } from "./app/modules/project/project.routes";
+import { AuthRouters } from "./app/modules/auth/auth.routers";
+import { envVars } from "./app/config/envVars";
+import { globalErrorHandler } from "./app/middlewares/globalErrorHandlers";
+import notFound from "./app/middlewares/notFound";
 
 const app = express();
 
@@ -31,12 +34,7 @@ app.get("/", (_req, res) => {
 });
 
 
-// 404 Handler
-app.use((req, res, next) => {
-  res.status(404).json({
-    success: false,
-    message: "Route Not Found",
-  });
-});
+app.use(globalErrorHandler)
+app.use(notFound)
 
 export default app;
