@@ -47,8 +47,8 @@ const getAllBlogs = async ({
           },
         ],
       },
-      typeof isFeatured === "boolean" && {isFeatured}
-    ].filter(Boolean)
+      typeof isFeatured === "boolean" && { isFeatured },
+    ].filter(Boolean),
   };
   const blogs = await prisma.blog.findMany({
     skip,
@@ -76,31 +76,31 @@ const getAllBlogs = async ({
 };
 
 const getSingleBlog = async (id: number) => {
-  const singleBlog = await prisma.blog.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      thumbnail: true,
-      isFeatured: true,
-      tags: true,
-      views: true,
-      authorId: true,
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+  return await prisma.$transaction(async (tx) => {
+    await tx.blog.update({
+      where: {
+        id,
+      },
+      data: {
+        views: { increment: 1 },
+      },
+    });
+
+    return await tx.blog.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
-      createdAt: true,
-      updatedAt: true,
-    },
+    });
   });
-  return singleBlog;
 };
 
 const updateBlog = async (
@@ -135,6 +135,38 @@ const updateBlog = async (
   return blog;
 };
 
+const getBlogStat = async () => {
+  return await prisma.$transaction(async (tx) => {
+    const aggregates = await prisma.blog.aggregate({
+      _count: true,
+      _sum: { views: true },
+      _avg: { views: true },
+      _min: { views: true },
+      _max: { views: true },
+    });
+    const featuredCount = await tx.blog.count({
+      where:{
+        isFeatured:true
+      }
+    })
+    const topfeatured = await tx.blog.findFirst({
+      
+    })
+    return {
+      stats: {
+        totalBlogs: aggregates._count ?? 0,
+        totalViews: aggregates._sum.views ?? 0,
+        avgViews: aggregates._avg.views ?? 0,
+        minViews: aggregates._min.views ?? 0,
+        maxViews: aggregates._max.views ?? 0,
+      },
+      featured:{
+        count: featuredCount ?? 0
+      }
+    };
+  });
+};
+
 const deleteBlog = async (id: number) => {
   const blogId = await prisma.blog.findUnique({
     where: {
@@ -158,6 +190,7 @@ export const BlogServices = {
   createBlog,
   getAllBlogs,
   getSingleBlog,
+  getBlogStat,
   updateBlog,
   deleteBlog,
 };
