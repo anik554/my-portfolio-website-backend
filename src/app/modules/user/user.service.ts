@@ -3,6 +3,7 @@ import { prisma } from "../../config/db";
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes" 
 import bcrypt from "bcryptjs";
+import { envVars } from "../../config/envVars";
 
 const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User>> => {
   const isUserExist = await prisma.user.findUnique({
@@ -15,7 +16,7 @@ const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User
     throw new AppError(httpStatus.BAD_GATEWAY,"User Already Exist")
   }
 
-  const hashedPassword = await bcrypt.hash(payload.password as string, 10)
+  const hashedPassword = await bcrypt.hash(payload.password as string, Number(envVars.BCRYPT_SALT_ROUND))
   // const isPasswordMatch = await bcrypt.compare(payload.password as string,hashedPassword)
 
   const user = await prisma.user.create({
