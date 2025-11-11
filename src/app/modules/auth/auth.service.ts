@@ -1,21 +1,27 @@
 import { Prisma, User } from "@prisma/client"
 import { prisma } from "../../config/db"
+import AppError from "../../errorHelpers/AppError"
+import httpStatus from "http-status-codes"
+import bcrypt from "bcryptjs"
 
 const loginWithEmailAndPassword = async({email,password}:{email:string,password:string})=>{
-    const user = await prisma.user.findUnique({
+    const isUserExist = await prisma.user.findUnique({
         where:{
             email
         }
     })
 
-    if(!user){
-        throw new Error("User not found!!")
+    if(!isUserExist){
+        throw new AppError(httpStatus.BAD_REQUEST,"Email Not Found!!")
     }
-    if(password !== user.password){
-        throw new Error("Password is incorrect!!")
-    }else{
-        return user
+
+    const isPasswordMatched = await bcrypt.compare(password,isUserExist.password as string)
+
+    if(!isPasswordMatched){
+        throw new AppError(httpStatus.BAD_REQUEST, "Password Incorrect")
     }
+
+    return isUserExist
 }
 
 const googleLogin = async(data:Prisma.UserCreateInput):Promise<Partial<User>>=>{

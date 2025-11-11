@@ -7,17 +7,14 @@ import { handlePrismaError } from "../../errorHelpers/handlePrismaError";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
       const user = await UserServices.createUser(req.body);
+      
       sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
         message: "User created successfully",
         data: user,
       });
-    } catch (error) {
-      handlePrismaError(error, res);
-    }
   }
 );
 
