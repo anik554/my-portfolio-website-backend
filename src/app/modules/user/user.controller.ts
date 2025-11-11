@@ -3,7 +3,6 @@ import { UserServices } from "./user.service";
 import httpStatus from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { handlePrismaError } from "../../errorHelpers/handlePrismaError";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -46,10 +45,11 @@ const getSingleUser = catchAsync(
 const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id;
-    const singleUser = await UserServices.updateUser(Number(userId), req.body);
+    const verifiedToken= req.user;
+    const singleUser = await UserServices.updateUser(Number(userId), req.body,verifiedToken);
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.CONTINUE,
+      statusCode: httpStatus.CREATED,
       message: "User Updated successfully",
       data: singleUser,
     });

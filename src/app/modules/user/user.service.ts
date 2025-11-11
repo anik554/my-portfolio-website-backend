@@ -4,6 +4,8 @@ import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes" 
 import bcrypt from "bcryptjs";
 import { envVars } from "../../config/envVars";
+import { Role, UserStatus } from "../../types/enum.types";
+import { JwtPayload } from "jsonwebtoken";
 
 const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User>> => {
   const isUserExist = await prisma.user.findUnique({
@@ -43,8 +45,6 @@ const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User
       picture: payload.picture,
       status: payload.status || "ACTIVE",
       isVerified: payload.isVerified ?? true,
-
-      // ✅ Create related auth provider record
       auths: {
         create: {
           provider: "credentials",
@@ -104,9 +104,40 @@ const getSingleUser = async (id: number) => {
 
 const updateUser = async (
   id: number,
-  payload: Prisma.UserUpdateInput
+  payload: Prisma.UserUpdateInput,
+  decodedToken:JwtPayload
 ): Promise<Partial<User>> => {
-  const user = await prisma.user.update({
+  const isUserExist = await prisma.user.findUnique({
+    where:{
+      id
+    }
+  })
+  console.log("isUserExist",isUserExist)
+  console.log("payload",payload)
+  if(!isUserExist){
+    throw new AppError(httpStatus.NOT_FOUND,"User not found")
+  }
+
+  if(payload.role){
+    if(decodedToken.role === Role.USER){
+      throw new AppError(httpStatus.FORBIDDEN,"You are authorized")
+    }
+    if(payload.role === Role.SUPER_ADMIN && decodedToken.role ===Role.ADMIN){
+      throw new AppError(httpStatus.FORBIDDEN,"You are authorized")
+    }
+  }
+
+  if(payload.isVerified || payload.status === UserStatus.ACTIVE){
+    if(decodedToken.role === Role.USER){
+      throw new AppError(httpStatus.FORBIDDEN,"You are authorized")
+    }
+  }
+
+  if(payload.password){
+    payload.password = await bcrypt.hash(payload.password as string, Number(envVars.BCRYPT_SALT_ROUND))
+  }
+
+  const newUpdateUser = await prisma.user.update({
     where: {
       id,
     },
@@ -126,7 +157,8 @@ const updateUser = async (
       updatedAt: true,
     },
   });
-  return user;
+  console.log("newUpdateUser",newUpdateUser)
+  return newUpdateUser;
 };
 
 const deleteUser = async (id: number) => {

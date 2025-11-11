@@ -15,6 +15,7 @@ export const checkAuth =(...authRoles: string[])=> async(req:Request, res:Respon
         if(!authRoles.includes(verifiedToken.role)){
             throw new AppError(httpStatus.FORBIDDEN,"You are not permitted to view this route!!!")
         }
+        req.user = verifiedToken
         next()
     } catch (error) {
         console.error("jwt error",error)

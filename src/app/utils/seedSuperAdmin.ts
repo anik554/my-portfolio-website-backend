@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../config/db";
 import { envVars } from "../config/envVars";
 import bcrypt from "bcryptjs";
+import { Role, UserStatus } from "../types/enum.types";
 
 export const seedSuperAdmin = async () => {
   try {
@@ -21,12 +22,12 @@ export const seedSuperAdmin = async () => {
 
     const payload: Prisma.UserCreateInput = {
       name: "Super Admin",
-      role: "SUPER_ADMIN",
+      role: Role.SUPER_ADMIN,
       email: envVars.SUPER_ADMIN_EMAIL,
       password: hashedPassword,
       isVerified: true,
       phone:"01734699652",
-      status: "ACTIVE",
+      status: UserStatus.ACTIVE,
       picture: null,
       auths: {
         create: {

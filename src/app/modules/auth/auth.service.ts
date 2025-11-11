@@ -3,7 +3,9 @@ import { prisma } from "../../config/db";
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import { generateToken } from "../../utils/jwt";
+import { envVars } from "../../config/envVars";
 
 const loginWithEmailAndPassword = async ({
   email,
@@ -34,16 +36,16 @@ const loginWithEmailAndPassword = async ({
   const jwtPayload = {
     userId: isUserExist.id,
     email: isUserExist.email,
-    role:isUserExist.role
-  }
+    role: isUserExist.role,
+  };
 
-  const accessToken = jwt.sign(jwtPayload,"secret",{
-    expiresIn: "1d"
-  })
+  const accessToken = generateToken(jwtPayload,envVars.JWT_ACCESS_SECRET,envVars.JWT_ACCESS_EXPIRES);
 
-  console.log(accessToken)
+  console.log(accessToken);
 
-  return isUserExist;
+  return {
+    accessToken,
+  };
 };
 
 const googleLogin = async (
