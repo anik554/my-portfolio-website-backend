@@ -1,0 +1,37 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
+interface EnvConfig {
+  PORT: string;
+  DATABASE_URL: string;
+  NODE_ENV: "development" | "production";
+  JWT_ACCESS_SECRET:string;
+  JWT_ACCESS_EXPIRES:string;
+  BCRYPT_SALT_ROUND:string;
+  SUPER_ADMIN_EMAIL:string;
+  SUPER_ADMIN_PASSWORD:string;
+}
+
+const loadEnvVariables = (): EnvConfig => {
+  const requiredEnvVariables: string[] = ["PORT", "DATABASE_URL", "NODE_ENV","JWT_ACCESS_SECRET","JWT_ACCESS_EXPIRES","BCRYPT_SALT_ROUND","SUPER_ADMIN_EMAIL","SUPER_ADMIN_PASSWORD"];
+
+  requiredEnvVariables.forEach((key) => {
+    if (!process.env[key]) {
+      throw new Error(`Missing require environment variabl ${key}`);
+    }
+  });
+
+  return {
+    PORT: process.env.PORT as string,
+    DATABASE_URL: process.env.DB_URL!,
+    NODE_ENV: process.env.NODE_ENV as "development" | "production",
+    JWT_ACCESS_SECRET:process.env.NODE_ENV as string,
+    JWT_ACCESS_EXPIRES:process.env.NODE_ENV as string,
+    BCRYPT_SALT_ROUND:process.env.NODE_ENV as string,
+    SUPER_ADMIN_EMAIL:process.env.NODE_ENV as string,
+    SUPER_ADMIN_PASSWORD:process.env.NODE_ENV as string
+  };
+};
+
+export const envVars = loadEnvVariables();

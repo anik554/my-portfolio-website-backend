@@ -1,7 +1,24 @@
 import { Prisma, User } from "@prisma/client";
 import { prisma } from "../../config/db";
+import AppError from "../../errorHelpers/AppError";
+import httpStatus from "http-status-codes" 
+import bcrypt from "bcryptjs";
+import { envVars } from "../../config/envVars";
 
 const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User>> => {
+  const isUserExist = await prisma.user.findUnique({
+    where:{
+      email: payload.email
+    }
+  })
+
+  if (isUserExist){
+    throw new AppError(httpStatus.BAD_GATEWAY,"User Already Exist")
+  }
+
+  const hashedPassword = await bcrypt.hash(payload.password as string, Number(envVars.BCRYPT_SALT_ROUND))
+  // const isPasswordMatch = await bcrypt.compare(payload.password as string,hashedPassword)
+
   const user = await prisma.user.create({
     select:{
       id: true,
@@ -17,7 +34,24 @@ const createUser = async (payload: Prisma.UserCreateInput): Promise<Partial<User
       createdAt: true,
       updatedAt: true,
     },
-    data: payload,
+    data: {
+      name: payload.name,
+      email: payload.email,
+      password: hashedPassword,
+      role: payload.role || "USER",
+      phone: payload.phone,
+      picture: payload.picture,
+      status: payload.status || "ACTIVE",
+      isVerified: payload.isVerified ?? true,
+
+      // ✅ Create related auth provider record
+      auths: {
+        create: {
+          provider: "credentials",
+          providerId: payload.email,
+        },
+      },
+    },
   });
   return user;
 };

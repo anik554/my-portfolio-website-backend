@@ -2,6 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "npx zod-prisma-types"
+  output   = "../src/@generated/zod"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -19,12 +24,19 @@ enum UserStatus {
   BLOCKED
 }
 
+enum ProviderType {
+  credentials
+  google
+}
+
 model AuthProvider {
-  id         Int    @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   userId     Int
-  provider   String
+  provider   ProviderType
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   providerId String
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model User {
