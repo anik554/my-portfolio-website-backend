@@ -30,8 +30,29 @@ const getNewAccessToken = catchAsync(
       sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: "Refresh Token Successfully",
+        message: "New Access Token Retrived Successfully",
         data: tokenInfo,
+      });
+    } 
+);
+
+const logout = catchAsync(
+  async (req: Request, res: Response) => {
+      res.clearCookie("accessToken",{
+        httpOnly: true,
+        secure: false,
+        sameSite:"lax"
+      })
+      res.clearCookie("refreshToken",{
+        httpOnly: true,
+        secure: false,
+        sameSite:"lax"
+      })
+      sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Loggout Successfully",
+        data: null,
       });
     } 
 );
@@ -48,5 +69,6 @@ const googleLogin = async (req: Request, res: Response) => {
 export const AuthControllers = {
   loginWithEmailAndPassword,
   googleLogin,
-  getNewAccessToken
+  getNewAccessToken,
+  logout
 };

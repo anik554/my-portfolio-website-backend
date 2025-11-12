@@ -112,8 +112,7 @@ const updateUser = async (
       id
     }
   })
-  console.log("isUserExist",isUserExist)
-  console.log("payload",payload)
+
   if(!isUserExist){
     throw new AppError(httpStatus.NOT_FOUND,"User not found")
   }
@@ -157,7 +156,6 @@ const updateUser = async (
       updatedAt: true,
     },
   });
-  console.log("newUpdateUser",newUpdateUser)
   return newUpdateUser;
 };
 
