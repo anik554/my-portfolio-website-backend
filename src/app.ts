@@ -8,10 +8,12 @@ import { AuthRouters } from "./app/modules/auth/auth.routers";
 import { envVars } from "./app/config/envVars";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandlers";
 import notFound from "./app/middlewares/notFound";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // Middleware
+app.use(cookieParser()); // Parse cookie
 app.use(cors()); // Enables Cross-Origin Resource Sharing
 app.use(compression()); // Compresses response bodies for faster delivery
 app.use(express.json()); // Parse incoming JSON requests

@@ -3,9 +3,7 @@ import { prisma } from "../../config/db";
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { generateToken } from "../../utils/jwt";
-import { envVars } from "../../config/envVars";
+import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
 
 const loginWithEmailAndPassword = async ({
   email,
@@ -33,20 +31,22 @@ const loginWithEmailAndPassword = async ({
     throw new AppError(httpStatus.BAD_REQUEST, "Password Incorrect");
   }
 
-  const jwtPayload = {
-    userId: isUserExist.id,
-    email: isUserExist.email,
-    role: isUserExist.role,
-  };
-
-  const accessToken = generateToken(jwtPayload,envVars.JWT_ACCESS_SECRET,envVars.JWT_ACCESS_EXPIRES);
-
-  console.log(accessToken);
+  const userTokens = createUserTokens(isUserExist)
+  const {password: pass, ...userWithoutPassword }=isUserExist
 
   return {
-    accessToken,
+    accessToken:userTokens.accessToken,
+    refreshToken:userTokens.refreshToken,
+    user:userWithoutPassword 
   };
 };
+
+const getNewAccessToken =async(refreshToken:string)=>{
+  const newAccessToken = await createNewAccessTokenWithRefreshToken(refreshToken)
+  return {
+    accessToken:newAccessToken
+  }
+}
 
 const googleLogin = async (
   data: Prisma.UserCreateInput
@@ -68,4 +68,5 @@ const googleLogin = async (
 export const AuthServices = {
   loginWithEmailAndPassword,
   googleLogin,
+  getNewAccessToken
 };
