@@ -1,10 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AuthServices } from "./auth.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
 import { setAuthCookie } from "../../utils/setCookie";
+import { createUserTokens } from "../../utils/userTokens";
+import { envVars } from "../../config/envVars";
+import { Prisma } from "@prisma/client";
 
 const loginWithEmailAndPassword = catchAsync(
   async (req: Request, res: Response) => {
@@ -66,9 +69,26 @@ const googleLogin = async (req: Request, res: Response) => {
   }
 };
 
+const googleCallback = catchAsync(
+  async (req: Request, res: Response, next:NextFunction) => {
+    let redirectTo = req.query.state ? req.query.state as string : "" 
+    if(redirectTo.startsWith("/")){
+        redirectTo = redirectTo.slice(1)
+    }
+    const user= req.user as Prisma.UserCreateInput
+    if(!user){
+      throw new AppError(httpStatus.NOT_FOUND, "User not found!")
+    }
+    const tokenInfo = createUserTokens(user)
+    setAuthCookie(res,tokenInfo)
+    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
+    } 
+);
+
 export const AuthControllers = {
   loginWithEmailAndPassword,
   googleLogin,
   getNewAccessToken,
-  logout
+  logout,
+  googleCallback
 };
