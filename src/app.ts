@@ -22,16 +22,15 @@ app.use(expresssession({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cookieParser()); // Parse cookie
-app.use(cors()); // Enables Cross-Origin Resource Sharing
+app.use(
+  cors({
+    origin: "http://localhost:5000",
+    credentials: true, // if you're using cookies/auth tokens
+  })
+);// Enables Cross-Origin Resource Sharing
 app.use(compression()); // Compresses response bodies for faster delivery
 app.use(express.json()); // Parse incoming JSON requests
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
 app.use("/api/v1/user",UserRouter)
 app.use("/api/v1/blog",BlogRouter)
 app.use("/api/v1/project",ProjectRouter)
