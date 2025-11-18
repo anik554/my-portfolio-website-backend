@@ -22,6 +22,8 @@ export const ProjectScalarFieldEnumSchema = z.enum(['id','title','description','
 
 export const ProfileScalarFieldEnumSchema = z.enum(['id','userId','title','bio','avatar','phone','location','github','linkedin','skills','experience','createdAt','updatedAt']);
 
+export const ContactScalarFieldEnumSchema = z.enum(['id','email','phone','message']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
@@ -139,6 +141,19 @@ export const ProfileSchema = z.object({
 })
 
 export type Profile = z.infer<typeof ProfileSchema>
+
+/////////////////////////////////////////
+// CONTACT SCHEMA
+/////////////////////////////////////////
+
+export const ContactSchema = z.object({
+  id: z.number().int(),
+  email: z.string(),
+  phone: z.string().nullable(),
+  message: z.string(),
+})
+
+export type Contact = z.infer<typeof ContactSchema>
 
 /////////////////////////////////////////
 // SELECT & INCLUDE
@@ -291,6 +306,16 @@ export const ProfileSelectSchema: z.ZodType<Prisma.ProfileSelect> = z.object({
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+}).strict()
+
+// CONTACT
+//------------------------------------------------------
+
+export const ContactSelectSchema: z.ZodType<Prisma.ContactSelect> = z.object({
+  id: z.boolean().optional(),
+  email: z.boolean().optional(),
+  phone: z.boolean().optional(),
+  message: z.boolean().optional(),
 }).strict()
 
 
@@ -755,6 +780,67 @@ export const ProfileScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Profi
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
 });
 
+export const ContactWhereInputSchema: z.ZodType<Prisma.ContactWhereInput> = z.strictObject({
+  AND: z.union([ z.lazy(() => ContactWhereInputSchema), z.lazy(() => ContactWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ContactWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ContactWhereInputSchema), z.lazy(() => ContactWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
+  email: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+  phone: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  message: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+});
+
+export const ContactOrderByWithRelationInputSchema: z.ZodType<Prisma.ContactOrderByWithRelationInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  phone: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  message: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const ContactWhereUniqueInputSchema: z.ZodType<Prisma.ContactWhereUniqueInput> = z.union([
+  z.object({
+    id: z.number().int(),
+    email: z.string(),
+  }),
+  z.object({
+    id: z.number().int(),
+  }),
+  z.object({
+    email: z.string(),
+  }),
+])
+.and(z.strictObject({
+  id: z.number().int().optional(),
+  email: z.string().optional(),
+  AND: z.union([ z.lazy(() => ContactWhereInputSchema), z.lazy(() => ContactWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ContactWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ContactWhereInputSchema), z.lazy(() => ContactWhereInputSchema).array() ]).optional(),
+  phone: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
+  message: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
+}));
+
+export const ContactOrderByWithAggregationInputSchema: z.ZodType<Prisma.ContactOrderByWithAggregationInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  phone: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
+  message: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => ContactCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => ContactAvgOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => ContactMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => ContactMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => ContactSumOrderByAggregateInputSchema).optional(),
+});
+
+export const ContactScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.ContactScalarWhereWithAggregatesInput> = z.strictObject({
+  AND: z.union([ z.lazy(() => ContactScalarWhereWithAggregatesInputSchema), z.lazy(() => ContactScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ContactScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ContactScalarWhereWithAggregatesInputSchema), z.lazy(() => ContactScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => IntWithAggregatesFilterSchema), z.number() ]).optional(),
+  email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
+  phone: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
+  message: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
+});
+
 export const AuthProviderCreateInputSchema: z.ZodType<Prisma.AuthProviderCreateInput> = z.strictObject({
   provider: z.lazy(() => ProviderTypeSchema),
   providerId: z.string(),
@@ -1212,6 +1298,52 @@ export const ProfileUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ProfileUnch
   experience: z.union([ z.lazy(() => ProfileUpdateexperienceInputSchema), z.string().array() ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const ContactCreateInputSchema: z.ZodType<Prisma.ContactCreateInput> = z.strictObject({
+  email: z.string(),
+  phone: z.string().optional().nullable(),
+  message: z.string(),
+});
+
+export const ContactUncheckedCreateInputSchema: z.ZodType<Prisma.ContactUncheckedCreateInput> = z.strictObject({
+  id: z.number().int().optional(),
+  email: z.string(),
+  phone: z.string().optional().nullable(),
+  message: z.string(),
+});
+
+export const ContactUpdateInputSchema: z.ZodType<Prisma.ContactUpdateInput> = z.strictObject({
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  message: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const ContactUncheckedUpdateInputSchema: z.ZodType<Prisma.ContactUncheckedUpdateInput> = z.strictObject({
+  id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  message: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const ContactCreateManyInputSchema: z.ZodType<Prisma.ContactCreateManyInput> = z.strictObject({
+  id: z.number().int().optional(),
+  email: z.string(),
+  phone: z.string().optional().nullable(),
+  message: z.string(),
+});
+
+export const ContactUpdateManyMutationInputSchema: z.ZodType<Prisma.ContactUpdateManyMutationInput> = z.strictObject({
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  message: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+});
+
+export const ContactUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ContactUncheckedUpdateManyInput> = z.strictObject({
+  id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  message: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 });
 
 export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.strictObject({
@@ -1685,6 +1817,35 @@ export const ProfileMinOrderByAggregateInputSchema: z.ZodType<Prisma.ProfileMinO
 export const ProfileSumOrderByAggregateInputSchema: z.ZodType<Prisma.ProfileSumOrderByAggregateInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const ContactCountOrderByAggregateInputSchema: z.ZodType<Prisma.ContactCountOrderByAggregateInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  phone: z.lazy(() => SortOrderSchema).optional(),
+  message: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const ContactAvgOrderByAggregateInputSchema: z.ZodType<Prisma.ContactAvgOrderByAggregateInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const ContactMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ContactMaxOrderByAggregateInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  phone: z.lazy(() => SortOrderSchema).optional(),
+  message: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const ContactMinOrderByAggregateInputSchema: z.ZodType<Prisma.ContactMinOrderByAggregateInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  phone: z.lazy(() => SortOrderSchema).optional(),
+  message: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const ContactSumOrderByAggregateInputSchema: z.ZodType<Prisma.ContactSumOrderByAggregateInput> = z.strictObject({
+  id: z.lazy(() => SortOrderSchema).optional(),
 });
 
 export const UserCreateNestedOneWithoutAuthsInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutAuthsInput> = z.strictObject({
@@ -3213,6 +3374,63 @@ export const ProfileFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ProfileFindUni
   where: ProfileWhereUniqueInputSchema, 
 }).strict();
 
+export const ContactFindFirstArgsSchema: z.ZodType<Prisma.ContactFindFirstArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereInputSchema.optional(), 
+  orderBy: z.union([ ContactOrderByWithRelationInputSchema.array(), ContactOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContactWhereUniqueInputSchema.optional(), 
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ContactScalarFieldEnumSchema, ContactScalarFieldEnumSchema.array() ]).optional(),
+}).strict();
+
+export const ContactFindFirstOrThrowArgsSchema: z.ZodType<Prisma.ContactFindFirstOrThrowArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereInputSchema.optional(), 
+  orderBy: z.union([ ContactOrderByWithRelationInputSchema.array(), ContactOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContactWhereUniqueInputSchema.optional(), 
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ContactScalarFieldEnumSchema, ContactScalarFieldEnumSchema.array() ]).optional(),
+}).strict();
+
+export const ContactFindManyArgsSchema: z.ZodType<Prisma.ContactFindManyArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereInputSchema.optional(), 
+  orderBy: z.union([ ContactOrderByWithRelationInputSchema.array(), ContactOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContactWhereUniqueInputSchema.optional(), 
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ ContactScalarFieldEnumSchema, ContactScalarFieldEnumSchema.array() ]).optional(),
+}).strict();
+
+export const ContactAggregateArgsSchema: z.ZodType<Prisma.ContactAggregateArgs> = z.object({
+  where: ContactWhereInputSchema.optional(), 
+  orderBy: z.union([ ContactOrderByWithRelationInputSchema.array(), ContactOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContactWhereUniqueInputSchema.optional(), 
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict();
+
+export const ContactGroupByArgsSchema: z.ZodType<Prisma.ContactGroupByArgs> = z.object({
+  where: ContactWhereInputSchema.optional(), 
+  orderBy: z.union([ ContactOrderByWithAggregationInputSchema.array(), ContactOrderByWithAggregationInputSchema ]).optional(),
+  by: ContactScalarFieldEnumSchema.array(), 
+  having: ContactScalarWhereWithAggregatesInputSchema.optional(), 
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict();
+
+export const ContactFindUniqueArgsSchema: z.ZodType<Prisma.ContactFindUniqueArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereUniqueInputSchema, 
+}).strict();
+
+export const ContactFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ContactFindUniqueOrThrowArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereUniqueInputSchema, 
+}).strict();
+
 export const AuthProviderCreateArgsSchema: z.ZodType<Prisma.AuthProviderCreateArgs> = z.object({
   select: AuthProviderSelectSchema.optional(),
   include: AuthProviderIncludeSchema.optional(),
@@ -3480,5 +3698,55 @@ export const ProfileUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.ProfileUpdat
 
 export const ProfileDeleteManyArgsSchema: z.ZodType<Prisma.ProfileDeleteManyArgs> = z.object({
   where: ProfileWhereInputSchema.optional(), 
+  limit: z.number().optional(),
+}).strict();
+
+export const ContactCreateArgsSchema: z.ZodType<Prisma.ContactCreateArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  data: z.union([ ContactCreateInputSchema, ContactUncheckedCreateInputSchema ]),
+}).strict();
+
+export const ContactUpsertArgsSchema: z.ZodType<Prisma.ContactUpsertArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereUniqueInputSchema, 
+  create: z.union([ ContactCreateInputSchema, ContactUncheckedCreateInputSchema ]),
+  update: z.union([ ContactUpdateInputSchema, ContactUncheckedUpdateInputSchema ]),
+}).strict();
+
+export const ContactCreateManyArgsSchema: z.ZodType<Prisma.ContactCreateManyArgs> = z.object({
+  data: z.union([ ContactCreateManyInputSchema, ContactCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict();
+
+export const ContactCreateManyAndReturnArgsSchema: z.ZodType<Prisma.ContactCreateManyAndReturnArgs> = z.object({
+  data: z.union([ ContactCreateManyInputSchema, ContactCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict();
+
+export const ContactDeleteArgsSchema: z.ZodType<Prisma.ContactDeleteArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  where: ContactWhereUniqueInputSchema, 
+}).strict();
+
+export const ContactUpdateArgsSchema: z.ZodType<Prisma.ContactUpdateArgs> = z.object({
+  select: ContactSelectSchema.optional(),
+  data: z.union([ ContactUpdateInputSchema, ContactUncheckedUpdateInputSchema ]),
+  where: ContactWhereUniqueInputSchema, 
+}).strict();
+
+export const ContactUpdateManyArgsSchema: z.ZodType<Prisma.ContactUpdateManyArgs> = z.object({
+  data: z.union([ ContactUpdateManyMutationInputSchema, ContactUncheckedUpdateManyInputSchema ]),
+  where: ContactWhereInputSchema.optional(), 
+  limit: z.number().optional(),
+}).strict();
+
+export const ContactUpdateManyAndReturnArgsSchema: z.ZodType<Prisma.ContactUpdateManyAndReturnArgs> = z.object({
+  data: z.union([ ContactUpdateManyMutationInputSchema, ContactUncheckedUpdateManyInputSchema ]),
+  where: ContactWhereInputSchema.optional(), 
+  limit: z.number().optional(),
+}).strict();
+
+export const ContactDeleteManyArgsSchema: z.ZodType<Prisma.ContactDeleteManyArgs> = z.object({
+  where: ContactWhereInputSchema.optional(), 
   limit: z.number().optional(),
 }).strict();

@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import expresssession from "express-session";
 import "./app/config/passport"
+import { ContactRouter } from "./app/modules/contact/contact.route";
 const app = express();
 
 // Middleware
@@ -35,6 +36,7 @@ app.use("/api/v1/user",UserRouter)
 app.use("/api/v1/blog",BlogRouter)
 app.use("/api/v1/project",ProjectRouter)
 app.use("/api/v1/auth",AuthRouters)
+app.use("/api/v1/contact",ContactRouter)
 
 // Default route for testing
 app.get("/", (_req, res) => {

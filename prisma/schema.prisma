@@ -102,3 +102,10 @@ model Profile {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+model Contact {
+  id Int @id @default(autoincrement())
+  email String @unique
+  phone String?
+  message String
+}
