@@ -25,7 +25,7 @@ app.use(passport.session())
 app.use(cookieParser()); // Parse cookie
 app.use(
   cors({
-    origin: "http://localhost:5000",
+    origin: "http://localhost:3000",
     credentials: true, // if you're using cookies/auth tokens
   })
 );// Enables Cross-Origin Resource Sharing
