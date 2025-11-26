@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BlogServices } from "./blog.service";
+import { BlogServices } from "../../app/modules/blog/blog.service";
 
 const createBlog = async (req: Request, res: Response) => {
   try {

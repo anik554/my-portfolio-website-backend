@@ -3,7 +3,7 @@ import { AuthControllers } from "./auth.controller"
 import passport from "passport"
 
 const router = express.Router()
-router.post("/login", AuthControllers.loginWithEmailAndPassword)
+router.post("/login", AuthControllers.login)
 router.post("/refresh-token", AuthControllers.getNewAccessToken)
 router.post("/logout", AuthControllers.logout)
 router.get("/google", async(req:Request, res:Response, next:NextFunction)=>{

@@ -32,7 +32,7 @@ const loginWithEmailAndPassword = async ({
   }
 
   const userTokens = createUserTokens(isUserExist)
-  const {password: pass, ...userWithoutPassword }=isUserExist
+  const {password: _, ...userWithoutPassword }=isUserExist
 
   return {
     accessToken:userTokens.accessToken,

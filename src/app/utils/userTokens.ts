@@ -9,7 +9,7 @@ import httpStatus from "http-status-codes"
 
 export const createUserTokens = (user: Prisma.UserCreateInput) => {
   const jwtPayload = {
-    userId: user.id,
+    userId: user?.id,
     email: user.email,
     role: user.role,
   };

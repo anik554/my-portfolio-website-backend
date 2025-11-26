@@ -21,14 +21,14 @@ export const globalErrorHandler = (
   }
 
   // 2. Zod Validation Error
-  else if (err instanceof ZodError) {
-    statusCode = 400;
-    message = "Validation failed";
-    errors = err.errors.map((e) => ({
-      path: e.path.join("."),
-      message: e.message,
-    }));
-  }
+else if (err instanceof ZodError) {
+  statusCode = 400;
+  message = "Validation failed";
+  errors = err.issues.map((issue) => ({
+    path: issue.path.join("."),
+    message: issue.message,
+  }));
+}
 
   // 3. Prisma Unique Constraint (P2002)
   else if (

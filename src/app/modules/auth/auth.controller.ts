@@ -9,9 +9,10 @@ import { createUserTokens } from "../../utils/userTokens";
 import { envVars } from "../../config/envVars";
 import { Prisma } from "@prisma/client";
 
-const loginWithEmailAndPassword = catchAsync(
+const login = catchAsync(
   async (req: Request, res: Response) => {
-      const loginInfo = await AuthServices.loginWithEmailAndPassword(req.body);
+      const { email, password } = req.body
+      const loginInfo = await AuthServices.loginWithEmailAndPassword({ email, password });
       setAuthCookie(res,loginInfo)
       sendResponse(res, {
         success: true,
@@ -86,7 +87,7 @@ const googleCallback = catchAsync(
 );
 
 export const AuthControllers = {
-  loginWithEmailAndPassword,
+  login,
   googleLogin,
   getNewAccessToken,
   logout,

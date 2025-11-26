@@ -93,7 +93,7 @@ export const BlogSchema = z.object({
   isFeatured: z.boolean(),
   tags: z.string().array(),
   views: z.number().int(),
-  authorId: z.number().int(),
+  authorId: z.number().int().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -113,7 +113,7 @@ export const ProjectSchema = z.object({
   liveLink: z.string().nullable(),
   features: z.string().array(),
   technologies: z.string().array(),
-  authorId: z.number().int(),
+  authorId: z.number().int().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -511,10 +511,10 @@ export const BlogWhereInputSchema: z.ZodType<Prisma.BlogWhereInput> = z.strictOb
   isFeatured: z.union([ z.lazy(() => BoolFilterSchema), z.boolean() ]).optional(),
   tags: z.lazy(() => StringNullableListFilterSchema).optional(),
   views: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
-  authorId: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableFilterSchema), z.number() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
-  author: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  author: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
 });
 
 export const BlogOrderByWithRelationInputSchema: z.ZodType<Prisma.BlogOrderByWithRelationInput> = z.strictObject({
@@ -525,7 +525,7 @@ export const BlogOrderByWithRelationInputSchema: z.ZodType<Prisma.BlogOrderByWit
   isFeatured: z.lazy(() => SortOrderSchema).optional(),
   tags: z.lazy(() => SortOrderSchema).optional(),
   views: z.lazy(() => SortOrderSchema).optional(),
-  authorId: z.lazy(() => SortOrderSchema).optional(),
+  authorId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   author: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
@@ -545,10 +545,10 @@ export const BlogWhereUniqueInputSchema: z.ZodType<Prisma.BlogWhereUniqueInput> 
   isFeatured: z.union([ z.lazy(() => BoolFilterSchema), z.boolean() ]).optional(),
   tags: z.lazy(() => StringNullableListFilterSchema).optional(),
   views: z.union([ z.lazy(() => IntFilterSchema), z.number().int() ]).optional(),
-  authorId: z.union([ z.lazy(() => IntFilterSchema), z.number().int() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableFilterSchema), z.number().int() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
-  author: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  author: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
 }));
 
 export const BlogOrderByWithAggregationInputSchema: z.ZodType<Prisma.BlogOrderByWithAggregationInput> = z.strictObject({
@@ -559,7 +559,7 @@ export const BlogOrderByWithAggregationInputSchema: z.ZodType<Prisma.BlogOrderBy
   isFeatured: z.lazy(() => SortOrderSchema).optional(),
   tags: z.lazy(() => SortOrderSchema).optional(),
   views: z.lazy(() => SortOrderSchema).optional(),
-  authorId: z.lazy(() => SortOrderSchema).optional(),
+  authorId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => BlogCountOrderByAggregateInputSchema).optional(),
@@ -580,7 +580,7 @@ export const BlogScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.BlogScal
   isFeatured: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema), z.boolean() ]).optional(),
   tags: z.lazy(() => StringNullableListFilterSchema).optional(),
   views: z.union([ z.lazy(() => IntWithAggregatesFilterSchema), z.number() ]).optional(),
-  authorId: z.union([ z.lazy(() => IntWithAggregatesFilterSchema), z.number() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema), z.number() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
 });
@@ -597,10 +597,10 @@ export const ProjectWhereInputSchema: z.ZodType<Prisma.ProjectWhereInput> = z.st
   liveLink: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   features: z.lazy(() => StringNullableListFilterSchema).optional(),
   technologies: z.lazy(() => StringNullableListFilterSchema).optional(),
-  authorId: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableFilterSchema), z.number() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
-  author: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  author: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
 });
 
 export const ProjectOrderByWithRelationInputSchema: z.ZodType<Prisma.ProjectOrderByWithRelationInput> = z.strictObject({
@@ -612,7 +612,7 @@ export const ProjectOrderByWithRelationInputSchema: z.ZodType<Prisma.ProjectOrde
   liveLink: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   features: z.lazy(() => SortOrderSchema).optional(),
   technologies: z.lazy(() => SortOrderSchema).optional(),
-  authorId: z.lazy(() => SortOrderSchema).optional(),
+  authorId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   author: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
@@ -633,10 +633,10 @@ export const ProjectWhereUniqueInputSchema: z.ZodType<Prisma.ProjectWhereUniqueI
   liveLink: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   features: z.lazy(() => StringNullableListFilterSchema).optional(),
   technologies: z.lazy(() => StringNullableListFilterSchema).optional(),
-  authorId: z.union([ z.lazy(() => IntFilterSchema), z.number().int() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableFilterSchema), z.number().int() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
-  author: z.union([ z.lazy(() => UserScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional(),
+  author: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema), z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
 }));
 
 export const ProjectOrderByWithAggregationInputSchema: z.ZodType<Prisma.ProjectOrderByWithAggregationInput> = z.strictObject({
@@ -648,7 +648,7 @@ export const ProjectOrderByWithAggregationInputSchema: z.ZodType<Prisma.ProjectO
   liveLink: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   features: z.lazy(() => SortOrderSchema).optional(),
   technologies: z.lazy(() => SortOrderSchema).optional(),
-  authorId: z.lazy(() => SortOrderSchema).optional(),
+  authorId: z.union([ z.lazy(() => SortOrderSchema), z.lazy(() => SortOrderInputSchema) ]).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => ProjectCountOrderByAggregateInputSchema).optional(),
@@ -670,7 +670,7 @@ export const ProjectScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Proje
   liveLink: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema), z.string() ]).optional().nullable(),
   features: z.lazy(() => StringNullableListFilterSchema).optional(),
   technologies: z.lazy(() => StringNullableListFilterSchema).optional(),
-  authorId: z.union([ z.lazy(() => IntWithAggregatesFilterSchema), z.number() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema), z.number() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema), z.coerce.date() ]).optional(),
 });
@@ -1034,7 +1034,7 @@ export const BlogCreateInputSchema: z.ZodType<Prisma.BlogCreateInput> = z.strict
   views: z.number().int().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  author: z.lazy(() => UserCreateNestedOneWithoutBlogsInputSchema),
+  author: z.lazy(() => UserCreateNestedOneWithoutBlogsInputSchema).optional(),
 });
 
 export const BlogUncheckedCreateInputSchema: z.ZodType<Prisma.BlogUncheckedCreateInput> = z.strictObject({
@@ -1045,7 +1045,7 @@ export const BlogUncheckedCreateInputSchema: z.ZodType<Prisma.BlogUncheckedCreat
   isFeatured: z.boolean().optional(),
   tags: z.union([ z.lazy(() => BlogCreatetagsInputSchema), z.string().array() ]).optional(),
   views: z.number().int().optional(),
-  authorId: z.number().int(),
+  authorId: z.number().int().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
@@ -1059,7 +1059,7 @@ export const BlogUpdateInputSchema: z.ZodType<Prisma.BlogUpdateInput> = z.strict
   views: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  author: z.lazy(() => UserUpdateOneRequiredWithoutBlogsNestedInputSchema).optional(),
+  author: z.lazy(() => UserUpdateOneWithoutBlogsNestedInputSchema).optional(),
 });
 
 export const BlogUncheckedUpdateInputSchema: z.ZodType<Prisma.BlogUncheckedUpdateInput> = z.strictObject({
@@ -1070,7 +1070,7 @@ export const BlogUncheckedUpdateInputSchema: z.ZodType<Prisma.BlogUncheckedUpdat
   isFeatured: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.lazy(() => BlogUpdatetagsInputSchema), z.string().array() ]).optional(),
   views: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  authorId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  authorId: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
@@ -1083,7 +1083,7 @@ export const BlogCreateManyInputSchema: z.ZodType<Prisma.BlogCreateManyInput> = 
   isFeatured: z.boolean().optional(),
   tags: z.union([ z.lazy(() => BlogCreatetagsInputSchema), z.string().array() ]).optional(),
   views: z.number().int().optional(),
-  authorId: z.number().int(),
+  authorId: z.number().int().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
@@ -1107,7 +1107,7 @@ export const BlogUncheckedUpdateManyInputSchema: z.ZodType<Prisma.BlogUncheckedU
   isFeatured: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   tags: z.union([ z.lazy(() => BlogUpdatetagsInputSchema), z.string().array() ]).optional(),
   views: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  authorId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  authorId: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
@@ -1122,7 +1122,7 @@ export const ProjectCreateInputSchema: z.ZodType<Prisma.ProjectCreateInput> = z.
   technologies: z.union([ z.lazy(() => ProjectCreatetechnologiesInputSchema), z.string().array() ]).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  author: z.lazy(() => UserCreateNestedOneWithoutProjectsInputSchema),
+  author: z.lazy(() => UserCreateNestedOneWithoutProjectsInputSchema).optional(),
 });
 
 export const ProjectUncheckedCreateInputSchema: z.ZodType<Prisma.ProjectUncheckedCreateInput> = z.strictObject({
@@ -1134,7 +1134,7 @@ export const ProjectUncheckedCreateInputSchema: z.ZodType<Prisma.ProjectUnchecke
   liveLink: z.string().optional().nullable(),
   features: z.union([ z.lazy(() => ProjectCreatefeaturesInputSchema), z.string().array() ]).optional(),
   technologies: z.union([ z.lazy(() => ProjectCreatetechnologiesInputSchema), z.string().array() ]).optional(),
-  authorId: z.number().int(),
+  authorId: z.number().int().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
@@ -1149,7 +1149,7 @@ export const ProjectUpdateInputSchema: z.ZodType<Prisma.ProjectUpdateInput> = z.
   technologies: z.union([ z.lazy(() => ProjectUpdatetechnologiesInputSchema), z.string().array() ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  author: z.lazy(() => UserUpdateOneRequiredWithoutProjectsNestedInputSchema).optional(),
+  author: z.lazy(() => UserUpdateOneWithoutProjectsNestedInputSchema).optional(),
 });
 
 export const ProjectUncheckedUpdateInputSchema: z.ZodType<Prisma.ProjectUncheckedUpdateInput> = z.strictObject({
@@ -1161,7 +1161,7 @@ export const ProjectUncheckedUpdateInputSchema: z.ZodType<Prisma.ProjectUnchecke
   liveLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   features: z.union([ z.lazy(() => ProjectUpdatefeaturesInputSchema), z.string().array() ]).optional(),
   technologies: z.union([ z.lazy(() => ProjectUpdatetechnologiesInputSchema), z.string().array() ]).optional(),
-  authorId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  authorId: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
@@ -1175,7 +1175,7 @@ export const ProjectCreateManyInputSchema: z.ZodType<Prisma.ProjectCreateManyInp
   liveLink: z.string().optional().nullable(),
   features: z.union([ z.lazy(() => ProjectCreatefeaturesInputSchema), z.string().array() ]).optional(),
   technologies: z.union([ z.lazy(() => ProjectCreatetechnologiesInputSchema), z.string().array() ]).optional(),
-  authorId: z.number().int(),
+  authorId: z.number().int().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
@@ -1201,7 +1201,7 @@ export const ProjectUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ProjectUnch
   liveLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   features: z.union([ z.lazy(() => ProjectUpdatefeaturesInputSchema), z.string().array() ]).optional(),
   technologies: z.union([ z.lazy(() => ProjectUpdatetechnologiesInputSchema), z.string().array() ]).optional(),
-  authorId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  authorId: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 });
@@ -1696,6 +1696,22 @@ export const StringNullableListFilterSchema: z.ZodType<Prisma.StringNullableList
   isEmpty: z.boolean().optional(),
 });
 
+export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.strictObject({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
+});
+
+export const UserNullableScalarRelationFilterSchema: z.ZodType<Prisma.UserNullableScalarRelationFilter> = z.strictObject({
+  is: z.lazy(() => UserWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => UserWhereInputSchema).optional().nullable(),
+});
+
 export const BlogCountOrderByAggregateInputSchema: z.ZodType<Prisma.BlogCountOrderByAggregateInput> = z.strictObject({
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
@@ -1743,6 +1759,22 @@ export const BlogSumOrderByAggregateInputSchema: z.ZodType<Prisma.BlogSumOrderBy
   id: z.lazy(() => SortOrderSchema).optional(),
   views: z.lazy(() => SortOrderSchema).optional(),
   authorId: z.lazy(() => SortOrderSchema).optional(),
+});
+
+export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullableWithAggregatesFilter> = z.strictObject({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional(),
 });
 
 export const ProjectCountOrderByAggregateInputSchema: z.ZodType<Prisma.ProjectCountOrderByAggregateInput> = z.strictObject({
@@ -2105,12 +2137,22 @@ export const BlogUpdatetagsInputSchema: z.ZodType<Prisma.BlogUpdatetagsInput> = 
   push: z.union([ z.string(),z.string().array() ]).optional(),
 });
 
-export const UserUpdateOneRequiredWithoutBlogsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutBlogsNestedInput> = z.strictObject({
+export const UserUpdateOneWithoutBlogsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneWithoutBlogsNestedInput> = z.strictObject({
   create: z.union([ z.lazy(() => UserCreateWithoutBlogsInputSchema), z.lazy(() => UserUncheckedCreateWithoutBlogsInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutBlogsInputSchema).optional(),
   upsert: z.lazy(() => UserUpsertWithoutBlogsInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => UserWhereInputSchema) ]).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutBlogsInputSchema), z.lazy(() => UserUpdateWithoutBlogsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutBlogsInputSchema) ]).optional(),
+});
+
+export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput> = z.strictObject({
+  set: z.number().optional().nullable(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional(),
 });
 
 export const ProjectCreatefeaturesInputSchema: z.ZodType<Prisma.ProjectCreatefeaturesInput> = z.strictObject({
@@ -2137,10 +2179,12 @@ export const ProjectUpdatetechnologiesInputSchema: z.ZodType<Prisma.ProjectUpdat
   push: z.union([ z.string(),z.string().array() ]).optional(),
 });
 
-export const UserUpdateOneRequiredWithoutProjectsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput> = z.strictObject({
+export const UserUpdateOneWithoutProjectsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneWithoutProjectsNestedInput> = z.strictObject({
   create: z.union([ z.lazy(() => UserCreateWithoutProjectsInputSchema), z.lazy(() => UserUncheckedCreateWithoutProjectsInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutProjectsInputSchema).optional(),
   upsert: z.lazy(() => UserUpsertWithoutProjectsInputSchema).optional(),
+  disconnect: z.union([ z.boolean(),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  delete: z.union([ z.boolean(),z.lazy(() => UserWhereInputSchema) ]).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => UserUpdateToOneWithWhereWithoutProjectsInputSchema), z.lazy(() => UserUpdateWithoutProjectsInputSchema), z.lazy(() => UserUncheckedUpdateWithoutProjectsInputSchema) ]).optional(),
 });
@@ -2375,6 +2419,33 @@ export const NestedBoolWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBoolWi
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedBoolFilterSchema).optional(),
   _max: z.lazy(() => NestedBoolFilterSchema).optional(),
+});
+
+export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.strictObject({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+});
+
+export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.strictObject({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
 });
 
 export const UserCreateWithoutAuthsInputSchema: z.ZodType<Prisma.UserCreateWithoutAuthsInput> = z.strictObject({
@@ -2613,7 +2684,7 @@ export const BlogScalarWhereInputSchema: z.ZodType<Prisma.BlogScalarWhereInput> 
   isFeatured: z.union([ z.lazy(() => BoolFilterSchema), z.boolean() ]).optional(),
   tags: z.lazy(() => StringNullableListFilterSchema).optional(),
   views: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
-  authorId: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableFilterSchema), z.number() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
 });
@@ -2674,7 +2745,7 @@ export const ProjectScalarWhereInputSchema: z.ZodType<Prisma.ProjectScalarWhereI
   liveLink: z.union([ z.lazy(() => StringNullableFilterSchema), z.string() ]).optional().nullable(),
   features: z.lazy(() => StringNullableListFilterSchema).optional(),
   technologies: z.lazy(() => StringNullableListFilterSchema).optional(),
-  authorId: z.union([ z.lazy(() => IntFilterSchema), z.number() ]).optional(),
+  authorId: z.union([ z.lazy(() => IntNullableFilterSchema), z.number() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema), z.coerce.date() ]).optional(),
 });
